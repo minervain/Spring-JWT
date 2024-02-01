@@ -18,6 +18,16 @@ public class Users {
 
     @Column(name = "password")
     private String password;
+    @Column(name = "Cinsiyet")
+    private String gender;
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
     public Long getId() {
         return id;

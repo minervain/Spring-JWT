@@ -27,7 +27,15 @@ public class UserController {
         List<Users> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody Users user) {
+        Optional<Users> optionalUser = userService.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+        if (optionalUser.isPresent()) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable Long id) {
         Optional<Users> user = userService.getUserById(id);
@@ -46,4 +54,17 @@ public class UserController {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @PutMapping("/{id}/gender")
+    public ResponseEntity<Users> updateUserGender(@PathVariable Long id, @RequestBody String gender) {
+        Optional<Users> optionalUser = userService.getUserById(id);
+        if (optionalUser.isPresent()) {
+            Users user = optionalUser.get();
+            user.setGender(gender);
+            Users updatedUser = userService.createUser(user);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
